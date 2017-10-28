@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="userDao" class="com.wil.dao.UserDao" scope="singleton"/>
+    <alias name="userDao" alias="dao"/>
+
+    <bean class="com.wil.service.impl.UserServiceImpl" id="userService">
+        <property name="userDao" ref="userDao"/>
+        <property name="id" value="1001"/>
+        <property name="name" value="seber"/>
+        <property name="nameList">
+            <list>
+                <value>class1</value>
+                <value>class2</value>
+            </list>
+        </property>
+        <property name="userDaoSet">
+            <set>
+                <ref bean="userDao"/>
+            </set>
+        </property>
+        <property name="userDaoMap">
+            <map>
+                <entry key="userDao1" value-ref="userDao"/>
+            </map>
+        </property>
+        <property name="properties">
+            <props>
+                <prop key="key1">value1</prop>
+                <prop key="key2">value2</prop>
+            </props>
+        </property>
+    </bean>
+
+
+</beans>
