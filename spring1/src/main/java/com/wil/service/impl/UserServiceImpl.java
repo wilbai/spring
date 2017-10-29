@@ -65,8 +65,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void hello() {
-        userDao.say();
         System.out.println("userService:hello, spring...");
-        System.out.println(id + name + nameList + userDaoSet + userDaoMap + properties);
     }
 }

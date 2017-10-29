@@ -19,4 +19,11 @@ public class AccessSpringTest {
         userService.hello();
     }
 
+    @Test
+    public void constructor() {
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml") ;
+        UserService userService = (UserService) context.getBean("userServiceImpl2");
+        userService.hello();
+    }
+
 }
