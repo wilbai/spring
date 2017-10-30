@@ -13,8 +13,16 @@
     <context:component-scan base-package="com.wil"/>
     <aop:aspectj-autoproxy/>
 
-    <bean class="org.apache.commons.dbcp2.BasicDataSource">
-        
+    <context:property-placeholder location="classpath:config.properties"/>
+    <bean class="org.apache.commons.dbcp2.BasicDataSource" id="dataSource">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <bean class="org.springframework.jdbc.core.JdbcTemplate" id="jdbcTemplate">
+        <property name="dataSource" ref="dataSource"/>
     </bean>
 
 

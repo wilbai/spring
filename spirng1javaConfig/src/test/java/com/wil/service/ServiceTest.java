@@ -25,7 +25,7 @@ public class ServiceTest extends BaseTest {
 
     @Test
     public void count() {
-        int count = userServiceIml.count();
+        Long count = userServiceIml.count();
         System.out.println(count);
 
     }

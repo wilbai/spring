@@ -5,5 +5,5 @@ package com.wil.service;
  */
 public interface UserService {
     void save();
-    int count();
+    Long count();
 }
