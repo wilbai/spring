@@ -26,9 +26,10 @@ public class JdkProxyTest {
                 studentServiceImpl.getClass().getInterfaces(),
                 myInvocationHandler);
         System.out.println(studentService.getClass().getName());
-        studentService.save();
+
 
     }
+
 
 
 }
