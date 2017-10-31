@@ -1,6 +1,7 @@
 package com.wil.service;
 
 import com.wil.BaseTest;
+import com.wil.entity.User;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -27,6 +28,14 @@ public class ServiceTest extends BaseTest {
     public void count() {
         Long count = userServiceIml.count();
         System.out.println(count);
-
     }
+
+    @Test
+    public void insert() {
+        User user = new User();
+        user.setName("exception");
+        user.setAddress_id(3);
+        userServiceIml.insert(user);
+    }
+
 }

@@ -1,13 +1,12 @@
 package com.wil;
 
-import com.wil.dao.UserDao;
-import com.wil.service.UserService;
-import com.wil.service.impl.UserServiceImpl;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
@@ -16,8 +15,9 @@ import javax.sql.DataSource;
  */
 @Configuration//替代基础xml
 @ComponentScan//DI
-@EnableAspectJAutoProxy//AOP
+@EnableAspectJAutoProxy//开启基于注解的AOP
 @PropertySource(value = "classpath:config.properties",ignoreResourceNotFound = true)
+@EnableTransactionManagement//开启基于注解的事务
 public class Application {
 
     /*@Value("${jdbc.driver}")
@@ -51,11 +51,10 @@ public class Application {
     }
 
     @Bean
-    public UserService userService() {
-       UserServiceImpl userService = new UserServiceImpl();
-       userService.setUserDao(new UserDao());
-       return userService;
-
+    public DataSourceTransactionManager transactionManager() {
+        DataSourceTransactionManager transactionManager = new DataSourceTransactionManager();
+        transactionManager.setDataSource(datasource());
+        return transactionManager;
     }
 
 }

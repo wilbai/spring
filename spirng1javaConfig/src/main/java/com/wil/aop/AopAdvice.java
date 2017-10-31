@@ -3,12 +3,13 @@ package com.wil.aop;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by wil on 2017/10/30.
  */
 @Component//将通知类放入容器
-@Aspect//设置为通知类
+//@Aspect//设置为通知类
 public class AopAdvice {
 
     @Pointcut("execution(* com.wil.service..*.*(..))")
@@ -44,6 +45,7 @@ public class AopAdvice {
 
         } catch (Throwable throwable) {
             System.out.println("--throwing--" + throwable);
+            throw new RuntimeException();
         } finally {
             System.out.println("--finally--");
         }

@@ -24,7 +24,12 @@ public class UserDao {
 
     public void save() {
         String sql = "insert into t_user (name, address_id) values (?, ?)";
-        jdbcTemplate.update(sql, "spring", 2);
+        jdbcTemplate.update(sql, "running5", 3);
+    }
+
+    public void insert(User user) {
+        String sql = "insert into t_user (name, address_id) values (?, ?)";
+        jdbcTemplate.update(sql, user.getName(), user.getAddress_id());
     }
 
     public User findById(int id) {
@@ -39,7 +44,8 @@ public class UserDao {
 
     public Long count() {
         String sql = "select count(*) from t_user";
-        return jdbcTemplate.queryForObject(sql, Long.class);
+        //return jdbcTemplate.queryForObject(sql, new SingleColumnRowMapper<>(Long.class));
+        return jdbcTemplate.queryForObject(sql,Long.class);
     }
 
     public User findByName(String name) {
