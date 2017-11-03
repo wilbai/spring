@@ -6,6 +6,7 @@
 <body>
     <h1>hello,SpringMVC!</h1>
     <h2>id--->${id}</h2>
-    <h3>name>>>>${name}</h3>
+    <h2>name>>>>${name}</h2>
+    <h2>say----> ${say}</h2>
 </body>
 </html>

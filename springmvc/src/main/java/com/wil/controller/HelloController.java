@@ -9,9 +9,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by wil on 2017/11/2.
@@ -96,7 +101,49 @@ public class HelloController {
         return "redirect:save";
     }
 
+    @GetMapping("/user")
+    @ResponseBody
+    public User findById() {
+        User user = new User();
+        user.setId(12);
+        user.setName("seber");
+        user.setPassword("123");
 
+        return user;
+    }
+
+    @GetMapping("/users")
+    @ResponseBody
+    public List<User> findAll() {
+        User user = new User();
+        user.setId(12);
+        user.setName("seber");
+        user.setPassword("123");
+
+        User user1 = new User();
+        user1.setId(10);
+        user1.setName("archer");
+        user1.setPassword("124");
+        return Arrays.asList(user, user1);
+    }
+
+    @GetMapping("/text")
+    @ResponseBody
+    public String jsonText() {
+        return "{userName : seber," +
+                "password : 123" +
+                "userId : 12}";
+    }
+
+    @GetMapping("/session")
+    public String session(HttpServletResponse response,
+                          HttpServletRequest request,
+                          HttpSession session,
+                          @CookieValue("JSESSIONID") String sessionId) {
+        session.setAttribute("say", "hi~SpringMVC");
+        System.out.println("sessionId -> " + sessionId);
+        return "hello";
+    }
 
 
 
