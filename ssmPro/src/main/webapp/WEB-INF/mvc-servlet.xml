@@ -18,7 +18,7 @@
     <mvc:annotation-driven/>
 
     <!--其他映射 配置路径为"/"时的视图-->
-    <mvc:view-controller path="/" view-name="book"/>
+    <mvc:view-controller path="/" view-name="product/list"/>
 
     <!--放行静态资源-->
     <mvc:default-servlet-handler/>
