@@ -25,6 +25,9 @@
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <style type="text/css">
+        .ztree li span.button.add {margin-left:2px; margin-right: -1px; background-position:-144px 0; vertical-align:top; *vertical-align:middle}
+    </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <!-- Site wrapper -->
@@ -260,24 +263,90 @@
 <!-- AdminLTE App -->
 <script src="/static/dist/js/app.min.js"></script>
 <script src="/static/plugins/tree/js/jquery.ztree.all.min.js"></script>
+<script src="/static/plugins/layer/layer.js"></script>
+
+
 <script>
     $(function(){
 
         var setting = {
+            async: {
+                enable: true,
+                url:"",
+                autoParam:["id", "name=n", "level=lv"],
+                otherParam:{"otherParam":"zTreeAsyncTest"},
+                dataFilter: filter
+            },
+            view: {expandSpeed:"",
+                addHoverDom: addHoverDom,
+                removeHoverDom: removeHoverDom,
+                selectedMulti: false
+            },
+            edit: {
+                enable: true
+            },
             data: {
                 simpleData: {
                     enable: true
                 }
             },
-            
             callback:{
+                beforeRemove: beforeRemove,
+                beforeRename: beforeRename,
                 onClick:function(event,treeId,treeNode,clickFlag){
                     //alert(treeNode.id + treeNode.name + treeNode.pId);
 
                     window.location.href="/employee?deptId=" + treeNode.id;
-                }
+                },
             }
         };
+        //
+        function filter(treeId, parentNode, childNodes) {
+            if (!childNodes) return null;
+            for (var i=0, l=childNodes.length; i<l; i++) {
+                childNodes[i].name = childNodes[i].name.replace(/\.n/g, '.');
+            }
+            return childNodes;
+        }
+        function beforeRemove(treeId, treeNode) {
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+            zTree.selectNode(treeNode);
+            return confirm("确认删除 节点 -- " + treeNode.name + " 吗？");
+        }
+        function beforeRename(treeId, treeNode, newName) {
+            if (newName.length == 0) {
+                setTimeout(function() {
+                    var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+                    zTree.cancelEditName();
+                    alert("节点名称不能为空.");
+                }, 0);
+                return false;
+            }
+            return true;
+        }
+
+        var newCount = 1;
+        function addHoverDom(treeId, treeNode) {
+            var sObj = $("#" + treeNode.tId + "_span");
+            if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
+            var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
+                + "' title='add node' onfocus='this.blur();'></span>";
+            sObj.after(addStr);
+            var btn = $("#addBtn_"+treeNode.tId);
+            if (btn) btn.bind("click", function(){
+                var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+                zTree.addNodes(treeNode, {id:(100 + newCount), pId:treeNode.id, name:"new node" + (newCount++)});
+                return false;
+            });
+        };
+        function removeHoverDom(treeId, treeNode) {
+            $("#addBtn_"+treeNode.tId).unbind().remove();
+        };
+
+        $(document).ready(function(){
+            $.fn.zTree.init($("#ztree"), setting, zNodes);
+        });
+        //
         
         $("#newEmployee").click(function () {
             var deptId = $(this).attr("rel");
@@ -292,6 +361,19 @@
             { id:4, pId:1, name:"经理办公室"}
         ];
         $.fn.zTree.init($("#ztree"), setting, zNodes);
+
+        var deptName = "";
+        $("#addNewDept").click(function () {
+            layer.prompt({title: '请输入部门名称', formType: 1},function(val, index){
+                //layer.msg('得到了'+val);
+                deptName = val;
+                layer.close(index);
+            });
+            $.post("/employee/addDept").done().error();
+        });
+
+
+
     });
 </script>
 </body>

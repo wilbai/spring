@@ -70,6 +70,11 @@ public class EmployeeController {
         return json;
     }
 
+    @PostMapping("/addDept")
+    public Json addDept() {
+        return null;
+    }
+
 
 
 }
