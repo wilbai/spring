@@ -20,12 +20,12 @@
             <li class="${param.menu == 'home' ? 'active' : ''}"><a href="../../documentation/index.html"><i class="fa fa-home"></i> <span>首页</span></a></li>
             <li class="header">系统功能</li>
             <!-- 客户管理 -->
-            <li class="treeview">
+            <li class="treeview ${param.menu == 'customer' ? 'active' : ''}">
                 <a href="#">
                     <i class="fa fa-address-book-o"></i> <span>客户管理</span>
                     <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
                 </a>
                 <ul class="treeview-menu">
                     <li><a href="/customer/my"><i class="fa fa-circle-o"></i> 我的客户</a></li>

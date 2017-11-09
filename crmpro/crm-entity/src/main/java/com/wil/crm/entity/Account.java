@@ -11,34 +11,17 @@ public class Account implements Serializable {
     private static final long serialVersionUID = 1L;
     private Integer id;
 
-    /**
-     * 账号
-     */
     private String userName;
 
-    /**
-     * 密码
-     */
     private String password;
 
-    /**
-     * 创建时间
-     */
     private Date createTime;
 
-    /**
-     * 最后修改时间
-     */
     private Date updateTime;
 
-    /**
-     * 手机号码
-     */
     private String mobile;
 
     private List<Dept> deptList;
-
-
 
     public Integer getId() {
         return id;
