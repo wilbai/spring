@@ -155,4 +155,9 @@ public class AccountServiceImpl implements AccountService {
         accountMapper.deleteByPrimaryKey(id);
         logger.info("删除ID为:{}的员工",id);
     }
+
+    @Override
+    public List<Account> findAllAccount() {
+        return accountMapper.selectByExample(new AccountExample());
+    }
 }

@@ -1,15 +1,14 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>CRM | CUSTOMER-MY</title>
-    <!-- Tell the browser to be responsive to screen width -->
-    <%@include file="../include/css.jsp"%>
+    <title>CRM | 公海客户</title>
+
+    <!-- css style -->
+    <%@ include file="../include/css.jsp"%>
+
     <style>
         .name-avatar {
             display: inline-block;
@@ -40,13 +39,13 @@
 <div class="wrapper">
 
     <!-- 顶部导航栏部分 -->
-    <%@include file="../include/header.jsp"%>
+    <%@ include file="../include/header.jsp"%>
 
     <!-- =============================================== -->
 
     <!-- 左侧菜单栏 -->
     <jsp:include page="../include/sider.jsp">
-        <jsp:param name="menu" value="customer"/>
+        <jsp:param name="menu" value="customer_public"/>
     </jsp:include>
 
     <!-- =============================================== -->
@@ -59,18 +58,12 @@
             <!-- Default box -->
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">我的客户</h3>
+                    <h3 class="box-title">公海客户</h3>
                     <div class="box-tools pull-right">
-                        <button class="btn btn-success btn-sm" id="addCustomer"><i class="fa fa-plus"></i> 新增客户</button>
+                        <button class="btn btn-success btn-sm"><i class="fa fa-plus"></i> 新增客户</button>
                         <button class="btn btn-primary btn-sm"><i class="fa fa-file-excel-o"></i> 导出Excel</button>
                     </div>
                 </div>
-                <c:if test="${not empty suc_message}" >
-                    <div class="alert alert-success">${suc_message}</div>
-                </c:if>
-                <c:if test="${not empty err_message}" >
-                    <div class="alert alert-danger">${err_message}</div>
-                </c:if>
                 <div class="box-body no-padding">
                     <table class="table table-hover">
                         <tbody>
@@ -82,16 +75,22 @@
                             <th>级别</th>
                             <th>联系方式</th>
                         </tr>
-                        <c:forEach items="${customerList}" var="cus">
                         <tr>
-                            <td><span class="name-avatar"><a href="/customer/${cus.id}">${fn:substring(cus.customerName, 0, 1)}</a></span></td>
-                            <td><a href="/customer/${cus.id}">${cus.customerName}</a></td>
-                            <td>${cus.jobTitle}</td>
-                            <td><fmt:formatDate value="${cus.lastContactTime}" pattern="yyyy年MM月dd日 HH:mm:ss"/></td>
-                            <td class="star">cus.level</td>
-                            <td><i class="fa fa-phone"></i> ${cus.mobile} <br></td>
+                            <td><span class="name-avatar">张</span></td>
+                            <td>张翼飞</td>
+                            <td>总经理</td>
+                            <td>7月19日</td>
+                            <td class="star">★★★★★</td>
+                            <td><i class="fa fa-phone"></i> 18939130988 <br></td>
                         </tr>
-                        </c:forEach>
+                        <tr>
+                            <td><span class="name-avatar">A</span></td>
+                            <td>Aimi</td>
+                            <td>销售顾问</td>
+                            <td>7月18日</td>
+                            <td class="star">★★★</td>
+                            <td><i class="fa fa-phone"></i> 17039130988 <br></td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -104,20 +103,13 @@
     <!-- /.content-wrapper -->
 
     <!-- 底部 -->
-    <%@include file="../include/footer.jsp"%>
+    <%@ include file="../include/footer.jsp"%>
 
 </div>
 <!-- ./wrapper -->
 
-<!-- jQuery 2.2.3 -->
-<%@include file="../include/js.jsp"%>
-<script>
-    $(function () {
-        $("#addCustomer").click(function () {
-            window.location.href = "/customer/new";
-        });
-    });
-</script>
+<!-- js -->
+<%@ include file="../include/js.jsp"%>
 </body>
 </html>
 

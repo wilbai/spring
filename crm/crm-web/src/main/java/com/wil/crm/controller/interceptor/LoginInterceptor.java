@@ -19,7 +19,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                              Object handler) throws Exception {
 
         String uri = request.getRequestURI();
-        if ("/static".startsWith(uri) || "".equals(uri) || "/".equals(uri)) {
+        if (uri.startsWith("/static/") || "".equals(uri) || "/".equals(uri)) {
             return true;
         }
         HttpSession session = request.getSession();
