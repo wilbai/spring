@@ -56,4 +56,10 @@ public interface AccountService {
      * @param id
      */
     void delEmployeeById(Integer id);
+
+    /**
+     * 查找所有user
+     * @return
+     */
+    List<Account> findAllAccount();
 }

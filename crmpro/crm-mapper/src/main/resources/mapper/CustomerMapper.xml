@@ -124,7 +124,7 @@
       #{updateTime,jdbcType=TIMESTAMP}, #{record,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.wil.crm.entity.Customer">
+  <insert id="insertSelective" parameterType="com.wil.crm.entity.Customer" useGeneratedKeys="true" keyProperty="id">
     insert into customer
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

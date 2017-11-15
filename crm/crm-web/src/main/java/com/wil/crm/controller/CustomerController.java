@@ -5,8 +5,10 @@ import com.wil.crm.controller.exception.ForbiddenException;
 import com.wil.crm.controller.exception.NotFoundException;
 import com.wil.crm.entity.Account;
 import com.wil.crm.entity.Customer;
+import com.wil.crm.entity.SaleChance;
 import com.wil.crm.service.AccountService;
 import com.wil.crm.service.CustomerService;
+import com.wil.crm.service.SaleChanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 
 /**
  * 客户管理控制器
@@ -30,6 +33,8 @@ public class CustomerController extends BaseController {
     private CustomerService customerService;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private SaleChanceService saleChanceService;
 
     /**
      * 展示我的客户列表
@@ -82,6 +87,9 @@ public class CustomerController extends BaseController {
     public String showCustomer(@PathVariable Integer id,
                                HttpSession session, Model model) {
         Customer customer = checkAccountPower(id, session);
+        List<SaleChance> saleChanceList = saleChanceService.findAllChancesByCustomerId(id);
+
+        model.addAttribute("saleChanceList", saleChanceList);
         model.addAttribute("customer", customer);
         model.addAttribute("accountList", accountService.findAllAccount());
         return "customer/show";

@@ -85,4 +85,6 @@ public interface CustomerService {
      * @param outputStream
      */
     void exportDataToXlsFile(Account account, OutputStream outputStream) throws IOException;
+
+    List<Customer> findCustomerListByAccountId(Account account);
 }

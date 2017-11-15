@@ -126,11 +126,33 @@
 
 <!-- js -->
 <%@ include file="../include/js.jsp"%>
+<script src="/static/bootstrap/js/jquery.validate.js"></script>
 <script>
 
     $(function () {
         $("#addBtn").click(function () {
             $("#addForm").submit();
+        });
+
+        $("#addForm").validate({
+            errorClass:'text-danger',
+            errorElement:'span',
+            rules:{
+                customerName:{
+                    required:true
+                },
+                mobile:{
+                    required:true
+                }
+            },
+            messages:{
+                customerName:{
+                    required:"请输入客户姓名"
+                },
+                mobile:{
+                    required:"请输入客户电话"
+                }
+            }
         });
 
 
