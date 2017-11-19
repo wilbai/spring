@@ -6,6 +6,7 @@ import com.wil.crm.entity.SaleChance;
 import com.wil.crm.entity.SaleChanceRecord;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by wil on 2017/11/13.
@@ -62,4 +63,6 @@ public interface SaleChanceService {
      * @return
      */
     List<SaleChance> findAllChancesByCustomerId(Integer id);
+
+    List<Map<String,Object>> countChanceByProcess(Account account);
 }

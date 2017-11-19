@@ -36,11 +36,11 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">我的销售机会</h3>
 
-                    <div class="box-tools pull-right">
+                    <%--<div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool">
                             <i class="fa fa-plus"></i> 添加机会
                         </button>
-                    </div>
+                    </div>--%>
                 </div>
                 <div class="box-body">
                     <form method="post" id="addForm">
@@ -79,6 +79,7 @@
                 <!-- /.box-body -->
                 <div class="box-footer">
                     <button class="btn btn-primary" id="addBtn">保存</button>
+                    <a href="javascript:history.back()" class="btn btn-default" >取消</a>
                 </div>
             </div>
             <!-- /.box -->

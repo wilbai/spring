@@ -88,10 +88,10 @@
                 <!-- /.box-body -->
             </div>
             <!-- /.box -->
+        </section>
             <c:if test="${page.pages > 1}">
                 <ul id="pagination-demo" class="pagination-sm pull-right"></ul>
             </c:if>
-        </section>
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
@@ -104,13 +104,13 @@
 
 <!-- js -->
 <%@ include file="../include/js.jsp"%>
-<script src="/static/plugins/page/jquery.twbsPagination.min.js"></script>
+<script src="/static/bootstrap/js/jquery.twbsPagination.min.js"></script>
 <script>
     $(function () {
-        <c:if test="${pageInfo.pages > 1}" >
+        <c:if test="${page.pages > 1}" >
         //分页
         $('#pagination-demo').twbsPagination({
-            totalPages: ${pageInfo.pages},
+            totalPages: ${page.pages},
             visiblePages: 3,
             first:'首页',
             last:'末页',

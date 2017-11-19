@@ -230,7 +230,29 @@
   <select id="findByMobile" resultType="com.wil.crm.entity.Customer">
     SELECT  * FROM  customer WHERE  mobile = #{mobile}
   </select>
-  <update id="updateByExampleSelective" parameterType="map">
+    <select id="countByLevel" resultType="java.util.Map">
+      SELECT
+          count(*) AS 'count',
+          `level`
+      FROM
+          customer
+      WHERE
+	      account_id = #{accountId}
+      GROUP BY
+          `level`
+    </select>
+    <select id="countByMonthly" resultType="java.util.Map">
+      SELECT
+          count(*) AS 'count',
+          MONTH (create_time) AS 'month'
+      FROM
+          customer
+      WHERE
+          account_id = #{accountId}
+      GROUP BY
+          MONTH (create_time)
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
     update customer
     <set>
       <if test="record.id != null">

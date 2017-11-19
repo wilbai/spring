@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 客户管理业务层
@@ -206,6 +207,16 @@ public class CustomerServiceImpl implements CustomerService {
         customerExample.createCriteria().andAccountIdEqualTo(account.getId());
         List<Customer> customerList = customerMapper.selectByExample(customerExample);
         return customerList;
+    }
+
+    @Override
+    public List<Map<String, Object>> countCustomerByLevel(Account account) {
+        return customerMapper.countByLevel(account.getId());
+    }
+
+    @Override
+    public List<Map<String, Object>> countCustomerByCreateTime(Account account) {
+        return customerMapper.countByMonthly(account.getId());
     }
 
 

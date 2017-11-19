@@ -7,6 +7,7 @@ import com.wil.crm.entity.Customer;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 客户管理业务层
@@ -87,4 +88,8 @@ public interface CustomerService {
     void exportDataToXlsFile(Account account, OutputStream outputStream) throws IOException;
 
     List<Customer> findCustomerListByAccountId(Account account);
+
+    List<Map<String, Object>> countCustomerByLevel(Account account);
+
+    List<Map<String,Object>> countCustomerByCreateTime(Account account);
 }

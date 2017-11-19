@@ -3,6 +3,8 @@ package com.wil.crm.mapper;
 import com.wil.crm.entity.Customer;
 import com.wil.crm.example.CustomerExample;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface CustomerMapper {
@@ -29,4 +31,8 @@ public interface CustomerMapper {
     int updateByPrimaryKey(Customer record);
 
     Customer findByMobile(String mobile);
+
+    List<Map<String,Object>> countByLevel(@Param("accountId") Integer accountId);
+
+    List<Map<String,Object>> countByMonthly(@Param("accountId") Integer accountId);
 }

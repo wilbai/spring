@@ -18,8 +18,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.NumberFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by wil on 2017/11/13.
@@ -50,7 +52,7 @@ public class SaleChanceServiceImpl implements SaleChanceService {
     @Override
     public PageInfo<SaleChance> pageMySaleChances(Account account, Integer pageNo) {
 
-        PageHelper.startPage(pageNo, 5);
+        PageHelper.startPage(pageNo, 10);
         List<SaleChance> saleChanceList = saleChanceMapper.findChancesByAccountId(account.getId());
         return new PageInfo<SaleChance>(saleChanceList);
     }
@@ -201,6 +203,27 @@ public class SaleChanceServiceImpl implements SaleChanceService {
         saleChanceExample.setOrderByClause("last_time desc");
 
         return saleChanceMapper.selectByExample(saleChanceExample);
+    }
+
+    @Override
+    public List<Map<String, Object>> countChanceByProcess(Account account) {
+
+        List<Map<String, Object>> countList = saleChanceMapper.countProcess(account.getId());
+        long sum = 0L;
+        for(Map<String, Object> map : countList) {
+            sum += (long) map.get("count");
+
+        }
+        NumberFormat numberFormat = NumberFormat.getInstance();
+        numberFormat.setMaximumFractionDigits(2);
+        for(Map<String, Object> map : countList) {
+            long num = (long) map.get("count");
+            String res = numberFormat.format((float) num / (float) sum * 100);
+            map.remove("count");
+            map.put("count", res);
+        }
+
+        return countList;
     }
 
 

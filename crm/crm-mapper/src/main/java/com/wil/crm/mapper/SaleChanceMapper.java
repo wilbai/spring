@@ -3,6 +3,8 @@ package com.wil.crm.mapper;
 import com.wil.crm.entity.SaleChance;
 import com.wil.crm.example.SaleChanceExample;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface SaleChanceMapper {
@@ -31,4 +33,6 @@ public interface SaleChanceMapper {
     List<SaleChance> findChancesByAccountId(Integer id);
 
     SaleChance findChanceWithCustomerById(Integer id);
+
+    List<Map<String,Object>> countProcess(@Param("accountId") Integer accountId);
 }
