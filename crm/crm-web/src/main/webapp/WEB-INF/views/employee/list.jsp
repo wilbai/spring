@@ -297,8 +297,17 @@
             });
         });
 
+
+
         //ztreeSetting
         var setting = {
+            view: {
+                removeHoverDom: removeHoverDom,
+                selectedMulti: false
+            },
+            edit: {
+                enable: true
+            },
             data: {
                 simpleData: {
                     enable: true
@@ -315,10 +324,14 @@
             },
             callback:{
                 onClick:function(event,treeId,treeNode,clickFlag){
-                    alert(treeNode.id + treeNode.deptName + treeNode.pId);
+                    //alert(treeNode.id + treeNode.deptName + treeNode.pId);
                     $("#deptId").val(treeNode.id);
                     dataTable.ajax.reload();
-                }
+                },
+                beforeRemove: beforeRemove,
+                beforeRename: beforeRename,
+                onRemove: zTreeOnRemove,
+                onRename: zTreeOnRename
             }
         };
         function ajaxDataFilter(treeId, parentNode, responseData) {
@@ -331,6 +344,74 @@
                 }
             }
             return responseData;
+        };
+        function removeHoverDom(treeId, treeNode) {
+            $("#addBtn_"+treeNode.id).unbind().remove();
+        };
+        /*删除与修改图标出现控制
+        function showRemoveBtn(treeId, treeNode) {
+            return !treeNode.isFirstNode;
+        };
+        function showRenameBtn(treeId, treeNode) {
+            return treeNode;
+        };*/
+        function beforeRemove(treeId, treeNode) {
+            var zTree = $.fn.zTree.getZTreeObj("ztree");
+            zTree.selectNode(treeNode);
+            return confirm("确认删除 节点 -- " + treeNode.deptName + " 吗？");
+        }
+        function beforeRename(treeId, treeNode, newName) {
+            if (newName.length == 0) {
+                setTimeout(function() {
+                    var zTree = $.fn.zTree.getZTreeObj("ztree");
+                    zTree.cancelEditName();
+                    alert("节点名称不能为空.");
+                }, 0);
+                return false;
+            }
+            return true;
+        }
+
+        //删除部门
+        function zTreeOnRemove(event, treeId, treeNode) {
+            //alert(treeNode.id + ", " + treeNode.deptName);
+            var treeObj = null;
+            $.get("/employee/dept/"+treeNode.id+"/delDept").done(function (data) {
+                if(data.state == "success") {
+                    layer.msg("删除成功");
+                    treeObj = $.fn.zTree.getZTreeObj("ztree");
+                } else {
+                    layer.msg(data.message);
+                    treeObj = $.fn.zTree.getZTreeObj("ztree");
+                }
+            }).error(function () {
+                layer.msg("服务器异常");
+                treeObj = $.fn.zTree.getZTreeObj("ztree");
+            });
+            //刷新zTree
+            treeObj.reAsyncChildNodes(null,"refresh");
+        }
+
+        //修改部门名称
+        function zTreeOnRename(event, treeId, treeNode, isCancel) {
+            var treeObj = null;
+            $.get("/employee/dept/"+treeNode.id+"/editDept",{"deptName":treeNode.deptName}).done(function (data) {
+                if(data.state == "success") {
+                    layer.msg("修改成功");
+                    treeObj = $.fn.zTree.getZTreeObj("ztree");
+                } else {
+                    layer.msg(data.message);
+                    treeObj = $.fn.zTree.getZTreeObj("ztree");
+                    isCancel = true;
+                    return isCancel;
+                }
+            }).error(function () {
+                layer.msg("服务器异常");
+                treeObj = $.fn.zTree.getZTreeObj("ztree");
+            });
+            //刷新zTree
+            treeObj.reAsyncChildNodes(null,"refresh");
+            dataTable.ajax.reload();
         }
 
 

@@ -40,4 +40,6 @@ public interface AccountMapper {
                                   @Param("accountName") String accountName);
 
     Long countByDeptId(@Param("deptId") Integer deptId);
+
+    Long countAccountByDeptId(@Param("id") Integer id);
 }

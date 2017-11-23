@@ -12,14 +12,15 @@ import com.wil.crm.mapper.AccountDeptMapper;
 import com.wil.crm.mapper.AccountMapper;
 import com.wil.crm.mapper.DeptMapper;
 import com.wil.crm.service.AccountService;
+import com.wil.weixin.WeiXinUtil;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +43,9 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     private AccountDeptMapper accountDeptMapper;
 
+    @Autowired
+    private WeiXinUtil weiXinUtil;
+
     @Override
     public Account login(String mobile, String password) {
         Account account = accountMapper.findByMobile(mobile);
@@ -57,6 +61,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional
     public void saveDept(String deptName) throws ServiceException {
         Dept dept = deptMapper.findByName(deptName);
         if (dept != null) {
@@ -66,6 +71,10 @@ public class AccountServiceImpl implements AccountService {
             dept.setDeptName(deptName);
             dept.setpId(COMPANY_ID);
             deptMapper.insertSelective(dept);
+
+            //添加到微信
+            weiXinUtil.createDept(dept.getId(), COMPANY_ID, deptName);
+
             logger.info("添加新部门:{}",deptName);
         }
     }
@@ -88,7 +97,7 @@ public class AccountServiceImpl implements AccountService {
         Integer deptId = (Integer) map.get("deptId");
         String accountName = (String) map.get("accountName");
 
-        if(deptId == null && COMPANY_ID.equals(deptId)) {
+        if(deptId == null || COMPANY_ID.equals(deptId)) {
             deptId = null;
         }
 
@@ -136,6 +145,9 @@ public class AccountServiceImpl implements AccountService {
             accountDeptKey.setDeptId(dId);
             accountDeptMapper.insert(accountDeptKey);
         }
+        //添加员工到微信
+        weiXinUtil.createAccount(account.getId(), userName, Arrays.asList(deptIdArray), mobile);
+
         logger.info("添加新员工：{}, 时间：{}",userName, new Date());
     }
 
@@ -153,11 +165,51 @@ public class AccountServiceImpl implements AccountService {
         accountDeptMapper.deleteByExample(accountDeptExample);
         //删除员工
         accountMapper.deleteByPrimaryKey(id);
+        weiXinUtil.deleteAccount(id);
         logger.info("删除ID为:{}的员工",id);
     }
 
     @Override
     public List<Account> findAllAccount() {
         return accountMapper.selectByExample(new AccountExample());
+    }
+
+    /**
+     * 根据id删除部门
+     * @param id
+     */
+    @Override
+    @Transactional
+    public void delDeptById(Integer id) {
+        Dept dept = deptMapper.selectByPrimaryKey(id);
+        if(dept == null) {
+            throw new ServiceException("部门不存在或已被删除");
+        }
+        //判断部门是否有有员工
+        Long accountNum = accountMapper.countAccountByDeptId(id);
+        if(accountNum == 0) {
+            deptMapper.deleteByPrimaryKey(id);
+            //删除微信中的部门
+            //weiXinUtil.deleteDept(id);
+            logger.info("删除ID为:{}的{}部门", id, dept.getDeptName());
+        } else {
+            throw new ServiceException("部门中含有员工,不能删除");
+        }
+    }
+
+    @Override
+    public void editDept(Integer id, String deptName) {
+
+        Dept dept = deptMapper.findByName(deptName);
+        if (dept != null) {
+            throw new ServiceException("部门已存在");
+        } else {
+            dept = deptMapper.selectByPrimaryKey(id);
+            dept.setDeptName(deptName);
+            deptMapper.updateByPrimaryKey(dept);
+            logger.info("ID为:{}的部门名称修改为:{}", id, deptName);
+        }
+
+
     }
 }

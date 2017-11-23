@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jms="http://www.springframework.org/schema/jms"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms.xsd">
+
+    <context:component-scan base-package="com.wil"/>
+
+    <bean id="activeMQConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="tcp://localhost:61616"/>
+    </bean>
+
+    <bean id="connectionFactory" class="org.springframework.jms.connection.SingleConnectionFactory">
+        <property name="targetConnectionFactory" ref="activeMQConnectionFactory"/>
+    </bean>
+
+    <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <constructor-arg ref="connectionFactory"/>
+        <!--pubSubDomain:false点对点/true发布、订阅-->
+        <property name="pubSubDomain" value="true"/>
+    </bean>
+
+
+   <!-- <bean id="listenerContainerFactory" class="org.springframework.jms.config.DefaultJmsListenerContainerFactory">
+        <property name="connectionFactory" ref="connectionFactory"/>
+    </bean>
+
+    <jms:annotation-driven container-factory="listenerContainerFactory"/>
+-->
+
+
+    <bean class="com.wil.mq.SpringMQConsumer" id="listener"/>
+
+    <!--<jms:listener-container destination-type="topic"
+                            container-type="default"
+                            connection-factory="connectionFactory"
+                            acknowledge="auto">
+        <jms:listener destination="spring MQ topic" ref="listener"/>
+    </jms:listener-container>-->
+
+    <bean id="destination" class="org.apache.activemq.command.ActiveMQTopic">
+        <constructor-arg name="name" value="spring MQ topic"/>
+    </bean>
+
+    <bean class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <property name="destination" ref="destination"/>
+        <property name="messageListener" ref="listener"/>
+        <property name="pubSubDomain" value="true"/>
+    </bean>
+
+</beans>

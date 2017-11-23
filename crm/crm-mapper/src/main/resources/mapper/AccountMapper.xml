@@ -220,6 +220,15 @@
             WHERE ad.dept_id = #{deptId}
         </if>
     </select>
+    <select id="countAccountByDeptId" resultType="java.lang.Long">
+        SELECT
+            count(*)
+        FROM
+            dept d
+        INNER JOIN account_dept ad ON d.id = ad.dept_id
+        WHERE
+            d.id = #{id}
+    </select>
     <update id="updateByExampleSelective" parameterType="map">
         update account
         <set>

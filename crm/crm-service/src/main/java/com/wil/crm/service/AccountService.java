@@ -62,4 +62,9 @@ public interface AccountService {
      * @return
      */
     List<Account> findAllAccount();
+
+    void delDeptById(Integer id);
+
+    void editDept(Integer id, String deptName);
+
 }

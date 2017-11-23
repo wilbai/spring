@@ -63,6 +63,39 @@ public class AccountController {
     }
 
     /**
+     * 删除部门
+     * @param id
+     * @return
+     */
+    @GetMapping("/dept/{id:\\d+}/delDept")
+    @ResponseBody
+    public AjaxResult delDept(@PathVariable Integer id) {
+        try {
+            accountService.delDeptById(id);
+            return new AjaxResult().success();
+        } catch (ServiceException ex) {
+            return new AjaxResult().error(ex.getMessage());
+        }
+    }
+
+    /**
+     * 修改部门名称
+     * @param id
+     * @param deptName
+     * @return
+     */
+    @GetMapping("/dept/{id:\\d+}/editDept")
+    @ResponseBody
+    public AjaxResult editDept(@PathVariable Integer id, String deptName) {
+        try {
+            accountService.editDept(id, deptName);
+            return new AjaxResult().success();
+        } catch (ServiceException ex) {
+            return new AjaxResult().error(ex.getMessage());
+        }
+    }
+
+    /**
      * DataTables插件请求时返回DataTableResult对象，含有总页数
      * 加载员工列表，可能存在的条件：deptId,accountName(模糊查询),分页
      * @param draw 会话：表示第几次请求
@@ -127,6 +160,8 @@ public class AccountController {
             return new AjaxResult().error(ex.getMessage());
         }
     }
+
+
 
 
 
