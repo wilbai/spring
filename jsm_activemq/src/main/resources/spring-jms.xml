@@ -6,50 +6,81 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
 http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms.xsd">
 
+    <!--自动扫描-->
     <context:component-scan base-package="com.wil"/>
 
+    <!--ActiveMQ ConnectionFactory-->
     <bean id="activeMQConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
         <property name="brokerURL" value="tcp://localhost:61616"/>
+        <!--配置重试参数对象-->
+        <property name="redeliveryPolicy" ref="redeliveryPolicy"/>
     </bean>
 
+    <!--配置重试参数-->
+    <bean id="redeliveryPolicy" class="org.apache.activemq.RedeliveryPolicy">
+        <!--重试次数-->
+        <property name="maximumRedeliveries" value="3"/>
+        <!--初次延迟-->
+        <property name="initialRedeliveryDelay" value="3000"/>
+        <!--每次延迟-->
+        <property name="redeliveryDelay" value="3000"/>
+    </bean>
+
+    <!--Soring JMS ConnectionFactory-->
     <bean id="connectionFactory" class="org.springframework.jms.connection.SingleConnectionFactory">
         <property name="targetConnectionFactory" ref="activeMQConnectionFactory"/>
     </bean>
 
+    <!--JMSTemplate-->
     <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
         <property name="connectionFactory" ref="connectionFactory"/>
-        <constructor-arg ref="connectionFactory"/>
-        <!--pubSubDomain:false点对点/true发布、订阅-->
-        <property name="pubSubDomain" value="true"/>
+        <!--客户端签收模式 1:自动 2：手动-->
+        <property name="sessionAcknowledgeMode" value="2"/>
     </bean>
 
-
-   <!-- <bean id="listenerContainerFactory" class="org.springframework.jms.config.DefaultJmsListenerContainerFactory">
+    <!--&lt;!&ndash;queue监听方式1&ndash;&gt;
+    <bean id="messageListenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
         <property name="connectionFactory" ref="connectionFactory"/>
+        <property name="messageListener" ref="myQueueListener"/>
+        <property name="destinationName" value="spring-MQ-queue"/>
+        <property name="sessionAcknowledgeMode" value="2"/>
     </bean>
 
-    <jms:annotation-driven container-factory="listenerContainerFactory"/>
--->
+    &lt;!&ndash;pub/sub监听方式1&ndash;&gt;
+    <bean id="topic" class="org.apache.activemq.command.ActiveMQTopic">
+        <constructor-arg name="name" value="spring-MQ-topic"/>
+    </bean>
+    <bean id="messageTopicListenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <property name="messageListener" ref="myTopicListener"/>
+        <property name="destination" ref="topic"/>
+    </bean>-->
 
+    <!--&lt;!&ndash;queue监听方式2&ndash;&gt;
+    <jms:listener-container connection-factory="connectionFactory">
+        <jms:listener destination="spring-MQ-queue" ref="myQueueListener"/>
+    </jms:listener-container>
 
-    <bean class="com.wil.mq.SpringMQConsumer" id="listener"/>
-
-    <!--<jms:listener-container destination-type="topic"
-                            container-type="default"
-                            connection-factory="connectionFactory"
-                            acknowledge="auto">
-        <jms:listener destination="spring MQ topic" ref="listener"/>
+    &lt;!&ndash;topic监听方式2&ndash;&gt;
+    <jms:listener-container connection-factory="connectionFactory" destination-type="topic">
+        <jms:listener destination="spring-MQ-topic" ref="myTopicListener"/>
     </jms:listener-container>-->
 
-    <bean id="destination" class="org.apache.activemq.command.ActiveMQTopic">
-        <constructor-arg name="name" value="spring MQ topic"/>
+    <!--queue基于注解的监听-->
+    <bean id="queueListenerContainerFactory" class="org.springframework.jms.config.DefaultJmsListenerContainerFactory">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <property name="sessionAcknowledgeMode" value="2"/>
     </bean>
 
-    <bean class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+    <!--topic基于注解的监听-->
+    <bean id="topicListenerContainerFactory" class="org.springframework.jms.config.DefaultJmsListenerContainerFactory">
         <property name="connectionFactory" ref="connectionFactory"/>
-        <property name="destination" ref="destination"/>
-        <property name="messageListener" ref="listener"/>
         <property name="pubSubDomain" value="true"/>
     </bean>
+
+    <jms:annotation-driven/>
+
+
+
 
 </beans>
