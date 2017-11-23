@@ -33,6 +33,7 @@ public class SpringMQTestCase {
                 return session.createTextMessage("hello queue message...");
             }
         });
+        //必须写 否则看不到重试机制程序就停了
         System.in.read();
     }
 
