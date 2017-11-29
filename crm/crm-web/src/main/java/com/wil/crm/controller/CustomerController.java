@@ -64,11 +64,6 @@ public class CustomerController extends BaseController {
         return "customer/new";
     }
 
-    /**
-     * 新增客户
-     * @param customer
-     * @return
-     */
     @PostMapping("my/new")
     public String newCustomer(Customer customer, RedirectAttributes redirectAttributes) {
         customerService.saveCustomer(customer);
@@ -206,21 +201,17 @@ public class CustomerController extends BaseController {
     }
 
 
-
-
-
-
-
     /**
      * 公海客户
      * @param pageNo
-     * @param session
      * @param model
      * @return
      */
     @GetMapping("/public")
     public String publicCustomer(@RequestParam(name = "p", required = false, defaultValue = "1") Integer pageNo,
-                                 HttpSession session, Model model) {
+                                 Model model) {
+        PageInfo<Customer> pageInfo = customerService.pageForPublicCustomer(pageNo);
+        model.addAttribute("page", pageInfo);
         return "customer/public";
     }
 

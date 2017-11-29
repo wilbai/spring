@@ -193,7 +193,7 @@
 
         //删除客户
         $("#delBtn").click(function () {
-            layer.confirm("确定要删除该客户么？",function () {
+            layer.confirm("删除客户将删除与该客户有关的所有信息，确定要删除么？",function () {
                 window.location.href = "/customer/my/"+customerId+"/delete";
             })
         });

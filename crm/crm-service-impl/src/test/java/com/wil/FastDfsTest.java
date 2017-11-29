@@ -1,5 +1,6 @@
 package com.wil;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 import org.csource.common.MyException;
 import org.csource.common.NameValuePair;
@@ -89,6 +90,11 @@ public class FastDfsTest {
         outputStream.flush();
         outputStream.close();
 
+    }
+
+    @Test
+    public void md5() {
+        System.out.println(DigestUtils.md5Hex("mysql" + "000000"));
     }
 
 

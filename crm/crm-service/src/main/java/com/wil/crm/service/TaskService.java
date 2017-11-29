@@ -36,4 +36,6 @@ public interface TaskService {
     void changeStateToDone(Task task);
 
     void changeStateToDo(Task task);
+
+    void editTask(Task task);
 }

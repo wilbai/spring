@@ -30,7 +30,7 @@ public class WeiXinTestCase {
 
     @Test
     public void deleteDept() {
-        weiXinUtil.deleteDept(1001);
+        weiXinUtil.deleteDept(12);
     }
 
     @Test

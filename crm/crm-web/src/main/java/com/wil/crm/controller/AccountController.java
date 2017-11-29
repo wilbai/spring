@@ -6,9 +6,12 @@ import com.wil.crm.exception.ServiceException;
 import com.wil.crm.service.AccountService;
 import com.wil.web.result.AjaxResult;
 import com.wil.web.result.DataTableResult;
-import org.apache.ibatis.annotations.Param;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -160,6 +163,51 @@ public class AccountController {
             return new AjaxResult().error(ex.getMessage());
         }
     }
+
+    /**
+     * 员工修改密码
+     * @return
+     */
+    @GetMapping("/{id:\\d+}/changePass")
+    public String changePassword(@PathVariable Integer id) {
+        return "employee/changePass";
+    }
+
+    @PostMapping("/{id:\\d+}/changePass")
+    public String changePassword(@PathVariable Integer id, String password) {
+        accountService.changePassword(id, password);
+        return "redirect:/";
+    }
+
+    /**
+     * 管理原修改员工信息
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id:\\d+}/editEmployee")
+    public String editEmployee(@PathVariable Integer id, Model model) {
+        Account account = accountService.findById(id);
+        List<Dept> deptList = accountService.findDeptListByAccountId(id);
+        List<Dept> restDepts = accountService.findRestDepts(id);
+        model.addAttribute("account", account);
+        model.addAttribute("deptList", deptList);
+        model.addAttribute("restDepts", restDepts);
+        return "employee/edit";
+    }
+
+
+    @PostMapping("/{id:\\d+}/editEmployee")
+    public String editEmployee(@PathVariable Integer id, String userName, String mobile,
+                               String password, Integer[] deptIdArray) {
+        accountService.editEmployee(id, userName, mobile, password, deptIdArray);
+        List<Dept> deptList = accountService.findDeptListByAccountId(id);
+        Subject subject = SecurityUtils.getSubject();
+        Session session = subject.getSession();
+        session.setAttribute("deptList", deptList);
+        return "redirect:/employee";
+    }
+
+
 
 
 

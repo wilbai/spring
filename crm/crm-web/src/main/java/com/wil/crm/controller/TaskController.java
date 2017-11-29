@@ -56,12 +56,23 @@ public class TaskController extends BaseController {
         return "task/new";
     }
 
+    /**
+     * 新增待办事项
+     * @param task
+     * @return
+     */
     @PostMapping("/new")
     public String newTask(Task task) {
         taskService.saveTask(task);
         return "redirect:/task/todo";
     }
 
+    /**
+     * 删除待办事项
+     * @param id
+     * @param session
+     * @return
+     */
     @GetMapping("/{id:\\d+}/del")
     public String deleteTask(@PathVariable Integer id, HttpSession session) {
 
@@ -86,6 +97,20 @@ public class TaskController extends BaseController {
         Task task = checkTask(session, id);
         taskService.changeStateToDo(task);
         return "redirect:/task/all";
+    }
+
+    @GetMapping("/{id:\\d+}/edit")
+    public String editTask(@PathVariable Integer id, Model model) {
+        Task task = taskService.findById(id);
+        model.addAttribute("task", task);
+        return "task/edit";
+    }
+
+    @PostMapping("/{id:\\d+}/edit")
+    public String editTask(@PathVariable Integer id, Task task) {
+        task.setId(id);
+        taskService.editTask(task);
+        return "redirect:/list";
     }
 
 

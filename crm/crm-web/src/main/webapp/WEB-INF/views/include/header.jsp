@@ -1,3 +1,5 @@
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!-- 顶部导航栏部分 -->
 <header class="main-header">
@@ -24,7 +26,7 @@
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img src="/static/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-                        <span class="hidden-xs">${sessionScope.currentAccount.userName}</span>
+                        <span class="hidden-xs"><shiro:principal property="userName"/></span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- User image -->
@@ -32,14 +34,18 @@
                             <img src="/static/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
                             <p>
-                                ${sessionScope.currentAccount.userName}
-                                <small>海外事业部</small>
+                                <shiro:principal property="userName"/> <br/>
+                                <c:forEach items="${sessionScope.deptList}" var="dept">
+                                    <span> <small>${dept.deptName}</small></span>
+                                </c:forEach>
+
+
                             </p>
                         </li>
                         <!-- Menu Footer-->
                         <li class="user-footer">
                             <div class="pull-left">
-                                <a href="#" class="btn btn-default btn-flat">个人设置</a>
+                                <a href="/employee/<shiro:principal property="id"/>/changePass" rel="<shiro:principal property="id"/>" class="btn btn-default btn-flat">个人设置</a>
                             </div>
                             <div class="pull-right">
                                 <a href="/logout" class="btn btn-default btn-flat">安全退出</a>

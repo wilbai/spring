@@ -48,7 +48,7 @@
                     <form method="post" id="addForm">
                         <div class="form-group">
                             <label>任务名称</label>
-                            <input type="hidden" name="accountId" value="${sessionScope.currentAccount.id}">
+                            <input type="hidden" name="accountId" value="<shiro:principal property="id"/>">
                             <input type="hidden" name="saleId" value="${saleId}">
                             <input type="hidden" name="customerId" value="${customerId}">
                             <input type="text" name="title" class="form-control">

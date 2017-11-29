@@ -92,4 +92,6 @@ public interface CustomerService {
     List<Map<String, Object>> countCustomerByLevel(Account account);
 
     List<Map<String,Object>> countCustomerByCreateTime(Account account);
+
+    PageInfo<Customer> pageForPublicCustomer(Integer pageNo);
 }

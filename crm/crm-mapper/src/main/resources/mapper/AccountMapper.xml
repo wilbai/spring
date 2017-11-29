@@ -229,6 +229,15 @@
         WHERE
             d.id = #{id}
     </select>
+    <select id="findDeptListByAccountId" resultType="com.wil.crm.entity.Dept">
+        SELECT
+            *
+        FROM
+            dept d
+        INNER JOIN account_dept ad ON d.id = ad.dept_id
+        WHERE
+            ad.account_id = #{accountId}
+    </select>
     <update id="updateByExampleSelective" parameterType="map">
         update account
         <set>

@@ -31,8 +31,10 @@
             padding: 5px 10px;
             overflow: visible;
             font-size: 12px;
+            /*height: 30px;*/
             line-height:1.5;
             font-weight: 400;
+            /*background-color:#0066FF;*/
         }
     </style>
 </head>
@@ -75,7 +77,7 @@
                                 <a href="/disk/download?_=${disk.id}&fileName=${disk.name}" class="btn btn-sm btn-danger"><i class="fa fa-download"></i> 下载</a>
                             </c:when>
                             <c:otherwise>
-                                <div id="picker"  class="btn btn-primary btn-sm"><i class="fa fa-upload"></i> 上传文件</div>
+                                <div id="picker"><i class="fa fa-upload"></i> 上传文件</div>
                                 <button id="newFolder" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> 新建文件夹</button>
                             </c:otherwise>
                         </c:choose>
@@ -107,11 +109,17 @@
                             <tr class="tr rowDetail" rel="${disk.id}">
                                 <td width="50" class="file_icon">
                                     <c:choose>
+                                        <c:when test="${disk.name.endsWith('pdf')}">
+                                            <i class="fa fa-file-pdf-o"></i>
+                                        </c:when>
+                                        <c:when test="${disk.name.endsWith('jpg') or disk.name.endsWith('png') or disk.name.endsWith('gif') }">
+                                            <i class="fa fa-file-image-o"></i>
+                                        </c:when>
                                         <c:when test="${disk.type == 'file'}">
-                                            <i class="fa fa-file-o"></i>
+                                            <i class="fa fa-file-text-o"></i>
                                         </c:when>
                                         <c:otherwise>
-                                            <i class="fa fa-folder-o"></i>
+                                            <i class="fa fa-folder-open-o"></i>
                                         </c:otherwise>
                                     </c:choose>
                                 </td>

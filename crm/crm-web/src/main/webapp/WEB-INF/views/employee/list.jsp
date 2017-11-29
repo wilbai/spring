@@ -59,7 +59,7 @@
                                     <th>姓名</th>
                                     <th>部门</th>
                                     <th>手机</th>
-                                    <th>#</th>
+                                    <th>操作</th>
                                 </tr>
                                 </thead>
                             </table>
@@ -91,16 +91,16 @@
             <div class="modal-body">
                 <form id="addEmployeeForm">
                     <div class="form-group">
-                        <label>姓名</label>
-                        <input type="text" class="form-control" name="userName">
+                        <label for="userName">姓名</label>
+                        <input id="userName" type="text" class="form-control" name="userName">
                     </div>
                     <div class="form-group">
-                        <label>手机号码</label>
-                        <input type="text" class="form-control" name="mobile">
+                        <label for="mobile">手机号码</label>
+                        <input id="mobile" type="text" class="form-control" name="mobile">
                     </div>
                     <div class="form-group">
-                        <label>密码(默认000000)</label>
-                        <input type="password" class="form-control" name="password" value="000000">
+                        <label for="password">密码(默认000000)</label>
+                        <input id="password" type="password" class="form-control" name="password" value="000000">
                     </div>
                     <div class="form-group">
                         <label>所属部门</label>
@@ -155,7 +155,8 @@
                 }},
                 {"data" : "mobile"},
                 {"data" : function (row) {
-                    return "<a href='javascript:;' class='delEmployee' rel='"+ row.id +"'>删除</a>";
+                    return "<a href='javascript:;' class='delEmployee' rel='"+ row.id +"'>删除  </a>" +
+                        "<a href='/employee/"+ row.id +"/editEmployee' class='editEmployee'>编辑</a>";
                 }},
             ],
             "columnDefs" : [
@@ -191,7 +192,7 @@
                 for(var i = 0; i < data.length; i++) {
                     var dept = data[i];
                     if(dept.id != 1) {
-                        var html = '<label class="checkbox-inline"><input type="checkbox" name="deptIdArray" value="'+dept.id+'">'+dept.deptName+'</label>';
+                        var html = '<label for="deptIdArray" class="checkbox-inline"><input  type="checkbox" name="deptIdArray" value="'+dept.id+'">'+dept.deptName+'</label>';
                         $("#checkboxList").append(html);
                     }
                 }
@@ -213,6 +214,12 @@
         $("#addEmployeeForm").validate({
             errorClass : "text-danger",
             errorElement : "span",
+            errorPlacement: function(error, element) {
+                $( element )
+                    .closest( "#addEmployeeForm" )
+                    .find( "label[for='" + element.attr( "name" ) + "']" )
+                    .append( error );
+            },
             rules : {
                 userName:{
                     required:true
@@ -224,22 +231,22 @@
                 password:{
                     required:true
                 },
-                deptId:{
+                deptIdArray:{
                     required:true
                 }
             },
             messages : {
                 userName:{
-                    required:"请输入姓名"
+                    required:" 请输入姓名"
                 },
                 mobile:{
-                    required:"请输入手机号",
+                    required:" 请输入手机号",
                     digits:"请输入整数"
                 },
                 password:{
                     required:"请输入密码"
                 },
-                deptId:{
+                deptIdArray:{
                     required:"请选择部门"
                 }
             },
@@ -294,6 +301,8 @@
                 }).error(function () {
                     layer.msg("服务器异常");
                 });
+
+
             });
         });
 
@@ -375,21 +384,22 @@
         //删除部门
         function zTreeOnRemove(event, treeId, treeNode) {
             //alert(treeNode.id + ", " + treeNode.deptName);
-            var treeObj = null;
             $.get("/employee/dept/"+treeNode.id+"/delDept").done(function (data) {
                 if(data.state == "success") {
                     layer.msg("删除成功");
-                    treeObj = $.fn.zTree.getZTreeObj("ztree");
+                    var treeObj = $.fn.zTree.getZTreeObj("ztree");
+                    treeObj.reAsyncChildNodes(null,"refresh");
                 } else {
                     layer.msg(data.message);
-                    treeObj = $.fn.zTree.getZTreeObj("ztree");
+                    var treeObj1 = $.fn.zTree.getZTreeObj("ztree");
+                    treeObj1.reAsyncChildNodes(null,"refresh");
                 }
             }).error(function () {
                 layer.msg("服务器异常");
-                treeObj = $.fn.zTree.getZTreeObj("ztree");
+                var treeObj2 = $.fn.zTree.getZTreeObj("ztree");
+                treeObj2.reAsyncChildNodes(null,"refresh");
             });
-            //刷新zTree
-            treeObj.reAsyncChildNodes(null,"refresh");
+            dataTable.ajax.reload();
         }
 
         //修改部门名称
@@ -398,19 +408,21 @@
             $.get("/employee/dept/"+treeNode.id+"/editDept",{"deptName":treeNode.deptName}).done(function (data) {
                 if(data.state == "success") {
                     layer.msg("修改成功");
-                    treeObj = $.fn.zTree.getZTreeObj("ztree");
+                    var treeObj = $.fn.zTree.getZTreeObj("ztree");
+                    treeObj.reAsyncChildNodes(null,"refresh");
                 } else {
                     layer.msg(data.message);
-                    treeObj = $.fn.zTree.getZTreeObj("ztree");
+                    var treeObj1 = $.fn.zTree.getZTreeObj("ztree");
+                    treeObj1.reAsyncChildNodes(null,"refresh");
                     isCancel = true;
                     return isCancel;
                 }
             }).error(function () {
                 layer.msg("服务器异常");
-                treeObj = $.fn.zTree.getZTreeObj("ztree");
+                var treeObj2 = $.fn.zTree.getZTreeObj("ztree");
+                treeObj2.reAsyncChildNodes(null,"refresh");
             });
-            //刷新zTree
-            treeObj.reAsyncChildNodes(null,"refresh");
+
             dataTable.ajax.reload();
         }
 

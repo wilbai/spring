@@ -42,6 +42,11 @@ public class DiskController extends BaseController {
     }
 
 
+    /**
+     * 新建文件夹
+     * @param disk
+     * @return
+     */
     @PostMapping("/new")
     @ResponseBody
     public AjaxResult saveFolder(Disk disk) {
@@ -50,6 +55,14 @@ public class DiskController extends BaseController {
         return new AjaxResult().successWithData(diskList);
     }
 
+    /**
+     * 上传文件
+     * @param pId
+     * @param accountId
+     * @param file
+     * @return
+     * @throws IOException
+     */
     @PostMapping("/upload")
     @ResponseBody
     public AjaxResult upload(Integer pId, Integer accountId,
@@ -70,6 +83,12 @@ public class DiskController extends BaseController {
 
     }
 
+    /**
+     * 下载文件
+     * @param id
+     * @param fileName
+     * @param response
+     */
     @GetMapping("/download")
     public void download(@RequestParam("_") Integer id,
                                @RequestParam(required = false, defaultValue = "") String fileName,

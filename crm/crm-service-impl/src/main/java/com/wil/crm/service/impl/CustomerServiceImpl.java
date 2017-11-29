@@ -4,10 +4,18 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wil.crm.entity.Account;
 import com.wil.crm.entity.Customer;
+import com.wil.crm.entity.SaleChance;
+import com.wil.crm.entity.Task;
 import com.wil.crm.example.CustomerExample;
+import com.wil.crm.example.SaleChanceExample;
+import com.wil.crm.example.TaskExample;
 import com.wil.crm.mapper.AccountMapper;
 import com.wil.crm.mapper.CustomerMapper;
+import com.wil.crm.mapper.SaleChanceMapper;
+import com.wil.crm.mapper.TaskMapper;
 import com.wil.crm.service.CustomerService;
+import com.wil.crm.service.SaleChanceService;
+import com.wil.crm.service.TaskService;
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
@@ -37,6 +45,14 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerMapper customerMapper;
     @Autowired
     private AccountMapper accountMapper;
+    @Autowired
+    private SaleChanceMapper saleChanceMapper;
+    @Autowired
+    private SaleChanceService saleChanceService;
+    @Autowired
+    private TaskMapper taskMapper;
+    @Autowired
+    TaskService taskService;
 
     @Value("#{'${customer.source}'.split(',')}")
     private List<String> customerSource;
@@ -128,7 +144,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void publicCustomer(Customer customer) {
         Account account = accountMapper.selectByPrimaryKey(customer.getAccountId());
-        customer.setAccountId(null);
+        customer.setAccountId(0);
         String record = customer.getRecord() == null ? "" : customer.getRecord() + ";";
         customer.setRecord(record + account.getUserName() + "将该客户放入公海");
         customerMapper.updateByPrimaryKey(customer);
@@ -140,9 +156,26 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public void deleteCustomer(Customer customer) {
-        //TODO 检查是否有关联的交易记录
-        //TODO 检查是否有关联的待办事项
-        //TODO 检查是否有关联的资料文件
+        //检查是否有关联的交易记录
+        SaleChanceExample saleChanceExample = new SaleChanceExample();
+        saleChanceExample.createCriteria().andCustomerIdEqualTo(customer.getId());
+        List<SaleChance> saleChanceList = saleChanceMapper.selectByExample(saleChanceExample);
+        if(saleChanceList != null && saleChanceList.size() > 0) {
+            for(SaleChance saleChance : saleChanceList) {
+                saleChanceService.deleteSaleChanceById(saleChance.getId());
+            }
+        }
+
+        //检查是否有关联的待办事项
+        TaskExample taskExample = new TaskExample();
+        taskExample.createCriteria().andCustomerIdEqualTo(customer.getId());
+        List<Task> taskList = taskMapper.selectByExample(taskExample);
+        if(taskList != null && taskList.size() > 0) {
+           for(Task task : taskList) {
+               taskService.deleteTaskById(task.getId());
+           }
+        }
+
         customerMapper.deleteByPrimaryKey(customer.getId());
         logger.info("删除了客户:{}", customer.getCustomerName());
     }
@@ -173,7 +206,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     /**
      * 将客户信息导出为xls文件
-     *
      * @param account
      * @param outputStream
      */
@@ -202,6 +234,11 @@ public class CustomerServiceImpl implements CustomerService {
         outputStream.close();
     }
 
+    /**
+     * 根据accountId查找客户列表
+     * @param account
+     * @return
+     */
     public List<Customer> findCustomerListByAccountId(Account account) {
         CustomerExample customerExample = new CustomerExample();
         customerExample.createCriteria().andAccountIdEqualTo(account.getId());
@@ -209,14 +246,34 @@ public class CustomerServiceImpl implements CustomerService {
         return customerList;
     }
 
+    /**
+     * 根据等级将客户分组
+     * @param account
+     * @return 返回每组的级别和数量
+     */
     @Override
     public List<Map<String, Object>> countCustomerByLevel(Account account) {
         return customerMapper.countByLevel(account.getId());
     }
 
+    /**
+     * 根据创建时间分组
+     * @param account
+     * @return 返回每组的月份和数量
+     */
     @Override
     public List<Map<String, Object>> countCustomerByCreateTime(Account account) {
         return customerMapper.countByMonthly(account.getId());
+    }
+
+    @Override
+    public PageInfo<Customer> pageForPublicCustomer(Integer pageNo) {
+        PageHelper.startPage(pageNo, 5);
+        CustomerExample customerExample = new CustomerExample();
+        customerExample.createCriteria().andAccountIdEqualTo(0);
+        customerExample.setOrderByClause("id desc");
+        List<Customer> customerList = customerMapper.selectByExample(customerExample);
+        return new PageInfo<Customer>(customerList);
     }
 
 

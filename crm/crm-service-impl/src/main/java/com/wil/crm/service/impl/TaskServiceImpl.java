@@ -116,7 +116,6 @@ public class TaskServiceImpl implements TaskService {
 
     /**
      * 新增任务
-     *
      * @param task
      */
     @Override
@@ -128,6 +127,71 @@ public class TaskServiceImpl implements TaskService {
         taskMapper.insert(task);
         logger.info("新增待办事项:{}",task.getTitle());
 
+        //添加调度任务
+        addTaskQuartzJob(task);
+    }
+
+    @Override
+    public Task findById(Integer id) {
+        return taskMapper.selectByPrimaryKey(id);
+    }
+
+    /**
+     * 删除任务
+     * @param id
+     */
+    @Override
+    @Transactional
+    public void deleteTaskById(Integer id) {
+        Task task = taskMapper.selectByPrimaryKey(id);
+        taskMapper.deleteByPrimaryKey(id);
+        //删除定时任务
+        deleteTaskQuartzJob(task);
+
+    }
+
+    /**
+     * 修改任务状态到完成
+     * @param task
+     */
+    @Override
+    @Transactional
+    public void changeStateToDone(Task task) {
+        task.setDone(DONE_STATE);
+        taskMapper.updateByPrimaryKey(task);
+        //删除定时任务
+        deleteTaskQuartzJob(task);
+
+    }
+
+    /**
+     * 修改任务状态为未完成
+     * @param task
+     */
+    @Override
+    @Transactional
+    public void changeStateToDo(Task task) {
+        task.setDone(TODO_STATE);
+        taskMapper.updateByPrimaryKey(task);
+        //删除定时任务
+        deleteTaskQuartzJob(task);
+
+    }
+
+    /**
+     * 修改提醒任务
+     * @param task
+     */
+    @Override
+    public void editTask(Task task) {
+        deleteTaskQuartzJob(task);
+        taskMapper.updateByPrimaryKey(task);
+        addTaskQuartzJob(task);
+
+
+    }
+
+    private void addTaskQuartzJob(Task task) {
         //添加调度任务
         if(StringUtils.isNotEmpty(task.getRemindTime())) {
             JobDataMap jobDataMap = new JobDataMap();
@@ -166,41 +230,10 @@ public class TaskServiceImpl implements TaskService {
         }
     }
 
-    @Override
-    public Task findById(Integer id) {
-        return taskMapper.selectByPrimaryKey(id);
-    }
-
-    @Override
-    @Transactional
-    public void deleteTaskById(Integer id) {
-        Task task = taskMapper.selectByPrimaryKey(id);
-        taskMapper.deleteByPrimaryKey(id);
-        //删除定时任务
-        deleteTaskQuartzJob(task);
-
-    }
-
-    @Override
-    @Transactional
-    public void changeStateToDone(Task task) {
-        task.setDone(DONE_STATE);
-        taskMapper.updateByPrimaryKey(task);
-        //删除定时任务
-        deleteTaskQuartzJob(task);
-
-    }
-
-    @Override
-    @Transactional
-    public void changeStateToDo(Task task) {
-        task.setDone(TODO_STATE);
-        taskMapper.updateByPrimaryKey(task);
-        //删除定时任务
-        deleteTaskQuartzJob(task);
-
-    }
-
+    /**
+     * 删除定时任务
+     * @param task
+     */
     private void deleteTaskQuartzJob(Task task) {
         if(StringUtils.isNotEmpty(task.getRemindTime())) {
             Scheduler scheduler = schedulerFactoryBean.getScheduler();

@@ -52,6 +52,7 @@
                 <div class="box-body">
 
                     <ul class="todo-list">
+                        <c:if test="${empty taskList}">你还没有创建任何待办事项</c:if>
                         <c:forEach items="${taskList}" var="task" >
                             <li class="${task.done == 1 ? 'done':''}">
                             <input type="checkbox" class="task_checkbox" ${task.done == 1?'checked':''} value="${task.id}">
@@ -66,7 +67,7 @@
                                     </c:choose>
                                     <small class="label ${task.overTime?'label-danger':'label-success'} "><i class="fa fa-clock-o"></i> ${task.finishTime}</small>
                                     <div class="tools">
-                                        <i class="fa fa-edit"></i>
+                                        <i class="fa fa-edit editTask" rel="${task.id}"></i>
                                         <i class="fa fa-trash-o delTask" rel="${task.id}"></i>
                                     </div>
                                 </li>
@@ -99,6 +100,11 @@
             layer.confirm("确定要删除么？",function () {
                 window.location.href = "/task/"+id+"/del";
             });
+        });
+
+        $(".editTask").click(function () {
+            var id = $(this).attr("rel");
+            window.location.href = "/task/"+id+"/edit";
         });
 
         $(".task_checkbox").click(function () {

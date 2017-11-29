@@ -54,6 +54,7 @@
                 <div class="box-body">
 
                     <ul class="todo-list">
+                        <c:if test="${empty taskList}">你还没有创建任何待办事项</c:if>
                         <c:forEach items="${taskList}" var="task" >
                             <li class="">
                             <input class="task_checkbox" type="checkbox" value="${task.id}">

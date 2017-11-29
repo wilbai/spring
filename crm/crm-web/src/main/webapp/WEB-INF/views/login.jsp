@@ -6,6 +6,7 @@
     <title>CRM | Login</title>
     <!-- css style -->
     <%@ include file="include/css.jsp"%>
+    <link rel="stylesheet" href="/static/plugins/iCheck/square/blue.css">
 </head>
 <body class="hold-transition login-page">
 <div class="login-box">
@@ -28,8 +29,11 @@
             <div class="row">
                 <div class="col-xs-8">
                     <div class="checkbox icheck">
-                        <label>
-                            <a href="#">忘记密码</a><br>
+                        <label class="">
+                            <div class="icheckbox_square-blue">
+                                <input type="checkbox" value="true" name="rememberMe">
+                            </div>
+                            自动登录
                         </label>
                     </div>
                 </div>
@@ -53,6 +57,7 @@
 <!-- Bootstrap 3.3.6 -->
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>
 <script src="/static/bootstrap/js/jquery.validate.js"></script>
+<script src="/static/plugins/iCheck/icheck.min.js"></script>
 <script>
     $(function () {
         $("#loginForm").validate({
@@ -74,6 +79,12 @@
                     required : "请输入密码"
                 }
             }
+        });
+
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_square-blue',
+            radioClass: 'iradio_square-blue',
+            increaseArea: '20%' // optional
         });
     });
 </script>

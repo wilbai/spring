@@ -6,6 +6,7 @@ package com.wil.crm.mapper;
 import java.util.List;
 
 import com.wil.crm.entity.Account;
+import com.wil.crm.entity.Dept;
 import com.wil.crm.example.AccountExample;
 import org.apache.ibatis.annotations.Param;
 
@@ -42,4 +43,6 @@ public interface AccountMapper {
     Long countByDeptId(@Param("deptId") Integer deptId);
 
     Long countAccountByDeptId(@Param("id") Integer id);
+
+    List<Dept> findDeptListByAccountId(@Param("accountId") Integer accountId);
 }

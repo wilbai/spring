@@ -51,18 +51,22 @@
                         </a>
                     </div>
                 </div>
-                <div class="box-body">
+                <div class="box-body no-padding">
                     <table class="table table-hover">
-                        <thead>
-                            <tr >
+                        <tbody>
+                            <tr style="font-weight: 800">
                                 <td>机会名称</td>
                                 <td>关联客户</td>
                                 <td>机会价值</td>
                                 <td>当前进度</td>
                                 <td>最后跟进时间</td>
                             </tr>
-                        </thead>
-                        <tbody>
+
+                            <c:if test="${empty page.list}">
+                                <tr>
+                                    <td colspan="5">你还未创建任何销售机会</td>
+                                </tr>
+                            </c:if>
                             <c:forEach items="${page.list}" var="chance">
                                 <tr class="rowDetail" rel="${chance.id}">
                                     <td>${chance.name}</td>

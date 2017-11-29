@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wil.pojo">
+    <class name="Student" table="t_stu">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="name" column="name"/>
+        <property name="classId" column="class_id"/>
+        <set name="teacherSet" table="t_teacher_student">
+            <key column="student_id"/>
+            <many-to-many class="Teacher" column="teacher_id"/>
+        </set>
+    </class>
+
+
+
+</hibernate-mapping>

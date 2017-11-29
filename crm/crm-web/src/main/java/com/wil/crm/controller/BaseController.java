@@ -1,5 +1,6 @@
 package com.wil.crm.controller;
 
+import com.wil.crm.auth.ShiroUtil;
 import com.wil.crm.entity.Account;
 
 import javax.servlet.http.HttpSession;
@@ -15,7 +16,7 @@ public abstract class BaseController {
      * @return
      */
     public Account getCurrentAccount(HttpSession session) {
-        return (Account) session.getAttribute("currentAccount");
+        return (Account) ShiroUtil.getCurrentAccount();
     }
 
 }

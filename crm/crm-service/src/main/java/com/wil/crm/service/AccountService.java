@@ -67,4 +67,38 @@ public interface AccountService {
 
     void editDept(Integer id, String deptName);
 
+    Account findByMobile(String mobile);
+
+    /**
+     * 根据accountId查找deptList
+     * @param accountId
+     * @return
+     */
+    List<Dept> findDeptListByAccountId(Integer accountId);
+
+    Account findById(Integer id);
+
+    /**
+     * 管理原修改员工信息
+     * @param id
+     * @param userName
+     * @param mobile
+     * @param password
+     * @param deptIdArray
+     */
+    void editEmployee(Integer id, String userName, String mobile, String password, Integer[] deptIdArray);
+
+    /**
+     * 员工自己修改密码
+     * @param id
+     * @param password
+     */
+    void changePassword(Integer id, String password);
+
+    /**
+     * 查找此account以外的部门
+     * @param id
+     * @return
+     */
+    List<Dept> findRestDepts(Integer id);
 }

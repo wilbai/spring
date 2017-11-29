@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+
+    <session-factory>
+        <!--数据库连接-->
+        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="connection.url">jdbc:mysql:///db_basicdata?useSSL=false</property>
+        <property name="connection.username">root</property>
+        <property name="connection.password">123456</property>
+
+        <!--方言-->
+        <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+
+        <!--数据库连接池-->
+        <property name="c3p0.max_size">2</property>
+        <property name="c3p0.min_size">2</property>
+        <property name="c3p0.timeout">5000</property>
+        <property name="c3p0.max_statements">100</property>
+        <property name="c3p0.idle_test_period">3000</property>
+        <property name="c3p0.acquire_increment">2</property>
+        <property name="c3p0.validate">false</property>
+
+        <!--显示hibernate自动生成的sql-->
+        <property name="show_sql">true</property>
+        <!--线程绑定当前session-->
+        <property name="current_session_context_class">thread</property>
+
+        <!--开启二级缓存-->
+        <property name="cache.region.factory_class">
+            org.hibernate.cache.ehcache.EhCacheRegionFactory
+        </property>
+
+        <!--映射文件的注册-->
+        <mapping class="com.wil.pojo.User"/>
+        <mapping class="com.wil.pojo.Address"/>
+        <mapping class="com.wil.pojo.Student"/>
+        <mapping class="com.wil.pojo.Teacher"/>
+        <mapping class="com.wil.pojo.Movie"/>
+        <mapping class="com.wil.pojo.Post"/>
+        <mapping class="com.wil.pojo.PostContent"/>
+        <mapping class="com.wil.pojo.Person"/>
+        <mapping class="com.wil.pojo.Card"/>
+
+
+
+        <!--<mapping resource="hbm/Student.hbm.xml"/>
+        <mapping resource="hbm/User.hbm.xml"/>
+        <mapping resource="hbm/Address.hbm.xml"/>
+        <mapping resource="hbm/Teacher.hbm.xml"/>
+        <mapping resource="hbm/Person.hbm.xml"/>
+        <mapping resource="hbm/Card.hbm.xml"/>
+        <mapping resource="hbm/Post.hbm.xml"/>
+        <mapping resource="hbm/PostContent.hbm.xml"/>
+        <mapping resource="hbm/Movie.hbm.xml"/>-->
+
+
+    </session-factory>
+</hibernate-configuration>
