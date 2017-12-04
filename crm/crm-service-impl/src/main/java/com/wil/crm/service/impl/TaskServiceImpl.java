@@ -173,8 +173,8 @@ public class TaskServiceImpl implements TaskService {
     public void changeStateToDo(Task task) {
         task.setDone(TODO_STATE);
         taskMapper.updateByPrimaryKey(task);
-        //删除定时任务
-        deleteTaskQuartzJob(task);
+        //添加定时任务
+        addTaskQuartzJob(task);
 
     }
 
@@ -183,12 +183,12 @@ public class TaskServiceImpl implements TaskService {
      * @param task
      */
     @Override
+    @Transactional
     public void editTask(Task task) {
         deleteTaskQuartzJob(task);
-        taskMapper.updateByPrimaryKey(task);
+        task.setCreateTime(new Date());
+        taskMapper.updateByPrimaryKeySelective(task);
         addTaskQuartzJob(task);
-
-
     }
 
     private void addTaskQuartzJob(Task task) {
@@ -225,6 +225,7 @@ public class TaskServiceImpl implements TaskService {
                 scheduler.scheduleJob(jobDetail, trigger);
                 scheduler.start();
             } catch (Exception ex) {
+                ex.printStackTrace();
                 throw new ServiceException(ex,"添加定时任务异常");
             }
         }
@@ -239,7 +240,7 @@ public class TaskServiceImpl implements TaskService {
             Scheduler scheduler = schedulerFactoryBean.getScheduler();
 
             try {
-                scheduler.deleteJob(new JobKey("taskId"+task.getId(),"sendMessageGroup"));
+                scheduler.deleteJob(new JobKey("taskId:"+task.getId(),"sendMessageGroup"));
                 logger.info("删除定时任务 taskId:{} groupName:{}", task.getId(), "sendMessageGroup");
             } catch (SchedulerException e) {
                 throw new ServiceException(e, "删除定时任务异常");

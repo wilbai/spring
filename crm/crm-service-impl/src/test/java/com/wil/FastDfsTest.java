@@ -1,11 +1,18 @@
 package com.wil;
 
+import com.wil.crm.entity.Task;
+import com.wil.crm.service.TaskService;
+import com.wil.crm.service.impl.TaskServiceImpl;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 import org.csource.common.MyException;
 import org.csource.common.NameValuePair;
 import org.csource.fastdfs.*;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -96,6 +103,7 @@ public class FastDfsTest {
     public void md5() {
         System.out.println(DigestUtils.md5Hex("mysql" + "000000"));
     }
+
 
 
 }

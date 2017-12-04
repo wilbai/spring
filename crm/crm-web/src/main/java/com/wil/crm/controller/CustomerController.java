@@ -1,6 +1,7 @@
 package com.wil.crm.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.wil.crm.auth.ShiroUtil;
 import com.wil.crm.controller.exception.ForbiddenException;
 import com.wil.crm.controller.exception.NotFoundException;
 import com.wil.crm.entity.Account;
@@ -88,6 +89,42 @@ public class CustomerController extends BaseController {
         model.addAttribute("customer", customer);
         model.addAttribute("accountList", accountService.findAllAccount());
         return "customer/show";
+    }
+
+    /**
+     * 展示公海客户详情
+     * @param id
+     * @param model
+     * @return
+     */
+    @GetMapping("/public/{id:\\d+}")
+    public String showPubCus(@PathVariable Integer id, Model model) {
+        Customer customer = customerService.findCusById(id);
+        if(customer == null) {
+            throw new NotFoundException("客户:"+id+"不存在或已被删除");
+        }
+        List<SaleChance> saleChanceList = saleChanceService.findAllChancesByCustomerId(id);
+
+        model.addAttribute("saleChanceList", saleChanceList);
+        model.addAttribute("customer", customer);
+
+        return "customer/show";
+    }
+
+    /**
+     * 从公海接收客户
+     * @param id
+     * @return
+     */
+    @GetMapping("/public/{id:\\d+}/get")
+    public String getCustomerFromPublic(@PathVariable Integer id) {
+        Customer customer = customerService.findCusById(id);
+        if(customer == null || customer.getAccountId() != 0) {
+            throw new NotFoundException("客户:"+id+"不存在或已被删除");
+        }
+        Account account = ShiroUtil.getCurrentAccount();
+        customerService.getCusFromPub(customer, account);
+        return "redirect:/customer/my";
     }
 
     /**

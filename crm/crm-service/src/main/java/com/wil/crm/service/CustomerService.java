@@ -87,11 +87,38 @@ public interface CustomerService {
      */
     void exportDataToXlsFile(Account account, OutputStream outputStream) throws IOException;
 
+    /**
+     * 根据accountId查找customerList
+     * @param account
+     * @return
+     */
     List<Customer> findCustomerListByAccountId(Account account);
 
+    /**
+     * 根据等级统计客户数量
+     * @param account
+     * @return
+     */
     List<Map<String, Object>> countCustomerByLevel(Account account);
 
+    /**
+     * 统计每月新增客户数量
+     * @param account
+     * @return
+     */
     List<Map<String,Object>> countCustomerByCreateTime(Account account);
 
+    /**
+     * 公海客户list
+     * @param pageNo
+     * @return
+     */
     PageInfo<Customer> pageForPublicCustomer(Integer pageNo);
+
+    /**
+     *当前account从公海接收客户
+     * @param id
+     * @param account
+     */
+    void getCusFromPub(Customer customer, Account account);
 }

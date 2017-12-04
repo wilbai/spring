@@ -69,7 +69,7 @@
                                     </c:choose>
                                     <small class="label label-success "><i class="fa fa-clock-o"></i> ${task.finishTime}</small>
                                     <div class="tools">
-                                        <i class="fa fa-edit editTask"></i>
+                                        <i class="fa fa-edit editTask" rel="${task.id}"></i>
                                         <i class="fa fa-trash-o delTask" rel="${task.id}"></i>
                                     </div>
                                 </li>
@@ -111,6 +111,11 @@
                 window.location.href="/task/"+id+"/state/done";
             }
 
+        });
+
+        $(".editTask").click(function () {
+            var id = $(this).attr("rel");
+            window.location.href = "/task/"+id+"/edit";
         });
 
 

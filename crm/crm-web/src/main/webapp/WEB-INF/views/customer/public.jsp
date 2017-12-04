@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -30,6 +32,9 @@
         .star {
             font-size: 20px;
             color: #ff7400;
+        }
+        .pink {
+            background-color: #c1e2b3;
         }
     </style>
 
@@ -122,7 +127,7 @@
     $(function () {
         $(".rowDetail").click(function () {
             var id = $(this).attr("rel");
-            window.location.href = "/customer/my/"+id;
+            window.location.href = "/customer/public/"+id;
         });
 
         //分页

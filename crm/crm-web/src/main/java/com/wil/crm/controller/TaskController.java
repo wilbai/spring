@@ -108,9 +108,15 @@ public class TaskController extends BaseController {
 
     @PostMapping("/{id:\\d+}/edit")
     public String editTask(@PathVariable Integer id, Task task) {
-        task.setId(id);
-        taskService.editTask(task);
-        return "redirect:/list";
+        Task newTask = taskService.findById(id);
+        newTask.setTitle(task.getTitle());
+        newTask.setRemindTime(task.getRemindTime());
+        newTask.setFinishTime(task.getFinishTime());
+        newTask.setCustomerId(task.getCustomerId());
+        newTask.setSaleId(task.getSaleId());
+        newTask.setDone(task.getDone());
+        taskService.editTask(newTask);
+        return "redirect:/task/all";
     }
 
 

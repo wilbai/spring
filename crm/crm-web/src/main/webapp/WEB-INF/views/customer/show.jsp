@@ -39,11 +39,16 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">客户资料</h3>
                     <div class="box-tools">
-                        <a href="javascript:history.back()" class="btn btn-primary btn-sm"><i class="fa fa-arrow-left"></i> 返回列表</a>
-                        <a href="/customer/my/${customer.id}/edit" class="btn bg-purple btn-sm"><i class="fa fa-pencil"></i> 编辑</a>
-                        <button id="transBtn" class="btn bg-orange btn-sm"><i class="fa fa-exchange"></i> 转交他人</button>
-                        <button id="publicBtn" class="btn bg-maroon btn-sm"><i class="fa fa-recycle"></i> 放入公海</button>
-                        <button id="delBtn" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> 删除</button>
+                        <a href="/customer/my/" class="btn btn-primary btn-sm"><i class="fa fa-arrow-left"></i> 返回列表</a>
+                        <c:if test="${customer.accountId != 0}">
+                            <a href="/customer/my/${customer.id}/edit" class="btn bg-purple btn-sm"><i class="fa fa-pencil"></i> 编辑</a>
+                            <button id="transBtn" class="btn bg-orange btn-sm"><i class="fa fa-exchange"></i> 转交他人</button>
+                            <button id="publicBtn" class="btn bg-maroon btn-sm"><i class="fa fa-recycle"></i> 放入公海</button>
+                            <button id="delBtn" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> 删除</button>
+                        </c:if>
+                        <c:if test="${customer.accountId == 0}">
+                            <button id="getCus" class="btn bg-maroon btn-sm"><i class="fa fa-recycle"></i> 接手客户</button>
+                        </c:if>
                     </div>
                 </div>
                 <div class="box-body no-padding">
@@ -114,6 +119,7 @@
                     <div class="box">
                         <div class="box-header with-border">
                             <h3 class="box-title">相关资料</h3>
+                            <p>${customer.record}</p>
                         </div>
                         <div class="box-body">
 
@@ -195,6 +201,13 @@
         $("#delBtn").click(function () {
             layer.confirm("删除客户将删除与该客户有关的所有信息，确定要删除么？",function () {
                 window.location.href = "/customer/my/"+customerId+"/delete";
+            })
+        });
+
+        //接手客户
+        $("#getCus").click(function () {
+            layer.confirm("确定要接收该客户么？",function () {
+                window.location.href = "/customer/public/"+customerId+"/get";
             })
         });
 

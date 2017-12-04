@@ -98,6 +98,7 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public void saveCustomer(Customer customer) {
+        customer.setLastContactTime(new Date());
         customer.setUpdateTime(new Date());
         customerMapper.insertSelective(customer);
         logger.info("添加新客户:{}",customer.getCustomerName());
@@ -130,10 +131,11 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public void transCustomer(Customer customer, Integer accountId) {
-        Account account = accountMapper.selectByPrimaryKey(accountId);
+        Account oldAccount = accountMapper.selectByPrimaryKey(customer.getAccountId());
         customer.setAccountId(accountId);
+        customer.setLastContactTime(new Date());
         String record = customer.getRecord() == null ? "" : customer.getRecord() + ";";
-        customer.setRecord(record + "该客户从同事："+account.getUserName()+"("+account.getMobile()+")"+"处转交过来");
+        customer.setRecord(record + "该客户从同事："+oldAccount.getUserName()+"("+oldAccount.getMobile()+")"+"处转交过来");
         customerMapper.updateByPrimaryKeySelective(customer);
     }
 
@@ -145,6 +147,7 @@ public class CustomerServiceImpl implements CustomerService {
     public void publicCustomer(Customer customer) {
         Account account = accountMapper.selectByPrimaryKey(customer.getAccountId());
         customer.setAccountId(0);
+        customer.setLastContactTime(new Date());
         String record = customer.getRecord() == null ? "" : customer.getRecord() + ";";
         customer.setRecord(record + account.getUserName() + "将该客户放入公海");
         customerMapper.updateByPrimaryKey(customer);
@@ -274,6 +277,21 @@ public class CustomerServiceImpl implements CustomerService {
         customerExample.setOrderByClause("id desc");
         List<Customer> customerList = customerMapper.selectByExample(customerExample);
         return new PageInfo<Customer>(customerList);
+    }
+
+    /**
+     * 当前account从公海接收客户
+     * @param customer
+     * @param account
+     */
+    @Override
+    public void getCusFromPub(Customer customer, Account account) {
+        customer.setAccountId(account.getId());
+        String record = customer.getRecord() == null ? "" : customer.getRecord() + ";";
+        customer.setRecord(record + account.getUserName() + "从公海接收客户");
+        customer.setLastContactTime(new Date());
+        customerMapper.updateByPrimaryKey(customer);
+
     }
 
 
