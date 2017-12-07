@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
+<head>
+    <meta charset="UTF-8">
+    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">比价购物</title>
+</head>
+<body>
+    <h1>商品秒杀A站</h1>
+    <div layout:fragment="content"></div>
+    <h3>
+        Footer
+        <p>copyright:@farewell</p>
+        <button th:if="${session.accountId == 1001}" class="btn btn-success pull-right">添加商品</button>
+        <button th:unless="${session.accounId == 1009}" class="btn btn-danger pull-right">黑市入口</button>
+    </h3>
+<script layout:fragment="js"></script>
+</body>
+</html>

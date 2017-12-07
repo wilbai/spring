@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>站点首页</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+</head>
+<body>
+    <div layout:fragment="content" class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <img th:src="@{'/image/1.jpg'}" src="../static/image/1.jpg" width="300px">
+
+            </div>
+            <div class="col-md-8">
+                <h2 th:text="${product.name}">productName</h2>
+                <h3 th:text="${product.title}">productTitle</h3>
+                <ul th:switch="${inventory}">
+                    <li th:case="3">数量：3</li>
+                    <li th:case="5">数量：5</li>
+                    <li th:case="*">数量：enough</li>
+                </ul>
+                <ul class="list-group" >
+                    <li class="list-group-item" th:each="place,iterator : ${placeList}" th:text="${iterator.index+'->'+iterator.count+'->'+place} "></li>
+                </ul>
+                <a th:href="@{/product(id=${product.id})}" >商品详情</a>
+                <a th:href="@{/product/{id}(id=${product.id})}">product_detail</a>
+                <div>
+                    <h3 style="display: inline" class="text-danger" th:text="${product.price}">抢购价：￥productPrice</h3>
+                    <h4 style="display: inline; text-decoration: line-through" th:text="${product.marketPrice}">市场价：￥productMarketPrice</h4>
+                </div>
+                <div>
+                    <button class="btn btn-danger">立即抢购</button>
+                </div>
+                <input id="input" th:ref="${product.id}" type="text" th:value="${attitude}" class="form-control">
+            </div>
+        </div>
+        <h4 id="h4" th:attr="data-id=${product.id}, data-name=${product.name}" th:text="${param.q}">页码</h4>
+
+
+    </div>
+<script layout:fragment="js" th:inline="javascript">
+    var id = [[${product.id}]];
+    [# th:if="${product.id == 1001}"]
+        var productName = [[${product.name}]];
+    [/]
+
+</script>
+</body>
+</html>

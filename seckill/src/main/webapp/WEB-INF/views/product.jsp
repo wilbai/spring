@@ -67,9 +67,9 @@
     </div>
 
     <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/layer/layer.js"></script>
     <script src="/static/js/moment.js"></script>
     <script src="/static/js/jquery.countdown.min.js"></script>
-    <script src="/static/js/layer/layer.js"></script>
     <script>
         $(function () {
             $("#clock").countdown(${product.startTimeTs}, function (event) {

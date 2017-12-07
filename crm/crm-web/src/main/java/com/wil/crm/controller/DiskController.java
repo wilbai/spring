@@ -96,6 +96,7 @@ public class DiskController extends BaseController {
 
         try {
             OutputStream outputStream = response.getOutputStream();
+            //获得输入流，在controller中设置响应报文的信息
             InputStream inputStream = diskService.getDownloadInputStream(id);
 
             if(StringUtils.isNotEmpty(fileName)) {
