@@ -1,6 +1,5 @@
 package com.wil.controller;
 
-import com.wil.entity.Consumer;
 import com.wil.service.ConsumerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

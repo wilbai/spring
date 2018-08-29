@@ -60,6 +60,7 @@
             <artifactId>spring-webmvc</artifactId>
             <version>4.3.9.RELEASE</version>
         </dependency>
+        <!--使用quartz框架时必须有-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
