@@ -29,6 +29,11 @@ import java.util.Base64;
 @Controller
 public class UploadController {
 
+    /**
+     * 客户端上传
+     * @param model
+     * @return
+     */
     @GetMapping("/upload")
     public String upload(Model model) {
         String accessKey = "Z0GOHuyEPgJFyDq_Tf01webmcdN2kR46OtVqSBJ8";
@@ -53,6 +58,10 @@ public class UploadController {
         return "upload";
     }
 
+    /**
+     * 服务器上传图片
+     * @return
+     */
     @GetMapping("/upload/local")
     public String uploadLocal() {
         return "upload_local";
