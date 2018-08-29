@@ -1,0 +1,106 @@
+1.Spring的web框架围绕DispatcherServlet设计。DispatcherServlet的作用是将请求分发到不同的处理器。
+2.在webapp/WEB-INF/web.xml中配置中央(前端)控制器
+	 <servlet>
+		<servlet-name>springmvc</servlet-name>
+		<servlet-class>org.framework.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>1<load-on-startup>
+	 </servlet>
+	 <servlet-mapping>
+		<servlet-name>springmvc</servlet-name>
+		<url-pattern>/<url-pattern>
+	 <servlet-mapping>
+3.在webapp/WEB-INF/springmvc-servlet.xml中配置DisPatcherServlet参数
+	<context:component-scan base-package="com.wil.controller"/> //自动扫描包中的Controller
+	<mvc:annotation-driver>//开启注解
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResovler">
+		<property name="viewClass" value="org.springframework.web.servlet.view.jstlView">
+		<property name="prefix" value="/WEB-INF/views">
+		<property name="suffix" value=".jsp">
+	</bean>
+4.Controller中:
+	1.类的头上:@Controller
+	2.@RequestMapping(value="url", methoed=RequestMethod.Get/Post, 
+					produces="application/json;charset=UTF-8")
+		1.可以加在类头上,表示该Controller中所有方法的映射路径前缀是url
+		2.可以加在方法头上
+	3.@ResponseBody 表示给view放回json数据
+	4.@PathVariable 加在方法参数中属性的前面,表示请求路径中的变量
+	5.@RequestParam(value="p", required=true/false, defaultValue="1") int page 
+	访问路径中问号后面的参数,例:localhost:8080/list/page?p=2
+	6.方法中的参数可以有:
+		1.HttpServletRequest
+		2.HttpServletResponse
+		3.HttpSession
+5.接收表单值:在方法的参数中变量名以view页面中表单name属性命名即可直接获取
+6.文件上传:
+	1.在springmvc-servlet.xml中配置文件上传解析器
+		<bean id="multipartResolver" 
+			class="org.framework.web.multipart.commons.CommonsMultipartResovler"> 
+			<property name="maxUploadSize" value=" 100000"> //最大容量
+		</bean>
+	2.form表单<from enctype="multipart/form-data">
+	3.方法参数:Multipart file 可以直接接收文件对象
+		1.file.getOriginalFilename(); 获取原始文件名
+		2.file.getSize(); 获取文件大小
+		3.file.getInputStream(); 获取文件输入流
+7.静态资源访问:springmvc-servlet.xml中:<mvc:resources location="/static/" mapping="/static/**">
+8.其他映射:<mvc:view-controller path="/" view-name="index"> 
+9.拦截器:
+	1.自定义拦截器类继承HandlerInterceptorAdapter,重写preHandle()方法,放行返回true
+		request.getRequestURI(); 获取访问路径的uri
+	2.springmvc-servlet.xml配置文件中:
+		<mvc:interceptors>
+			<mvc:interceptor>
+				<mvc:mapping path="/**"> //拦截所有
+				<bean class="com.wil.controller.MyInterceptor">
+					<property name="excludeUrls"> //set注入
+						<list>
+							<value>/home</value>
+						</list>
+					</property>
+				</bean>
+			</mvc:interceptor>
+		</mvc:interceptors>
+		
+总结
+1.web.xml中的配置
+	1.过滤器:
+		1.字符集过滤器 encodingFilter <filter>/<filter-mapping>
+		2.shiro过滤器 shiroFilter 
+	2.SpringMVC中央控制器 <servlet>/<servlet-mapping>
+	3.设置在web容器启动时创建spring容器
+			<listener>
+				<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+			</listener>
+	4.创建spring容器时读取spring中的所有配置文件:
+			<context-param>
+				<param-name>contextConfigLocation</param-name>
+				<param-value>classpath*:applicationContext*.xml</param-value>
+			</context-param>
+2.springmvc-servlet.xml中的配置:
+	1.自动扫描controller包中注解为@Controller的类
+		<context:component-scan basepackage="">
+			<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller">
+		</context:component-scan>
+		//主配置文件中的自动扫描需要排除@Controller注解类
+	2.mvc注解驱动 <mvc:annotation-driver>	
+	3.放行静态资源 <mvc:default-servlet-handler>
+	4.视图解析器
+	5.文件上传解析器
+	6.拦截器
+3.SpringMVC中的注解:
+	类头上:
+		1.@Controller
+		2.@RestController (@Controller+@ResponseBody)
+		3.@RequestMapping("/url")
+	方法头上:
+		1.@RequestMapping
+		2.@GetMapping
+		3.@PostMapping
+		4.@ResponseBody
+	方法的参数中:
+		1.@PathVariable
+		2.@RequestParam
+		3.@RequestBody 获取请求中的json/xml数据
+	
+		
