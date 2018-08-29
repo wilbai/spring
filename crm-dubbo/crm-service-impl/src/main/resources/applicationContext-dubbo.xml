@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-http://www.springframework.org/schema/beans/spring-beans.xsd">
+http://www.springframework.org/schema/beans/spring-beans.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <dubbo:protocol name="dubbo" host="192.168.1.112" port="20882"/>
+    <dubbo:registry address="zookeeper://192.168.1.112:2181"/>
+
+    <!--服务的注册-->
+    <dubbo:service interface="com.wil.crm.service.AccountService" ref="accountServiceImpl" loadbalance="roundrobin" version="1.0"/>
+    <dubbo:service interface="com.wil.crm.service.CustomerService" ref="customerServiceImpl" timeout="5000"/>
+    <dubbo:service interface="com.wil.crm.service.DiskService" ref="diskServiceImpl"/>
+    <dubbo:service interface="com.wil.crm.service.SaleChanceService" ref="saleChanceServiceImpl"/>
+    <dubbo:service interface="com.wil.crm.service.TaskService" ref="taskServiceImpl"/>
+
+
 </beans>
