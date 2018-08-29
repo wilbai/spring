@@ -1,9 +1,13 @@
 package com.wil.entity;
 
+import com.sun.xml.internal.ws.developer.Serialization;
+
+import java.io.Serializable;
+
 /**
  * Created by wil on 2017/12/4.
  */
-public class User {
+public class User implements Serializable{
 
     private Integer id;
     private String name;
