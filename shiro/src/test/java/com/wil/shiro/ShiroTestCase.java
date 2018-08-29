@@ -22,6 +22,11 @@ public class ShiroTestCase {
         SecurityUtils.setSecurityManager(securityManager);
         Subject subject = SecurityUtils.getSubject();
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken("seber", "123");
+        loginTool(subject, usernamePasswordToken);
+        subject.logout();
+    }
+
+    private void loginTool(Subject subject, UsernamePasswordToken usernamePasswordToken) {
         try {
             subject.login(usernamePasswordToken);
             System.out.println("登录成功");
@@ -35,7 +40,6 @@ public class ShiroTestCase {
             ex.printStackTrace();
             System.out.println("权限不足");
         }
-        subject.logout();
     }
 
     @Test
@@ -45,19 +49,7 @@ public class ShiroTestCase {
         SecurityUtils.setSecurityManager(securityManager);
         Subject subject = SecurityUtils.getSubject();
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken("seber", "123");
-        try {
-            subject.login(usernamePasswordToken);
-            System.out.println("登录成功");
-        } catch (UnknownAccountException ex) {
-            System.out.println("帐号不存在");
-        } catch (LockedAccountException ex) {
-            System.out.println("帐号被禁用");
-        } catch (IncorrectCredentialsException ex) {
-            System.out.println("帐号或密码错误");
-        } catch (AuthenticationException ex) {
-            ex.printStackTrace();
-            System.out.println("权限不足");
-        }
+        loginTool(subject, usernamePasswordToken);
         subject.logout();
     }
 
